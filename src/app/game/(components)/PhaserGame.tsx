@@ -1,6 +1,5 @@
 import { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
 import { EventBus } from './scenes/EventBus';
-import StartGame from './scenes/main';
 
 export interface IRefPhaserGame {
     game: Phaser.Game | null;
@@ -15,16 +14,23 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
     const game = useRef<Phaser.Game | null>(null!);
 
     useLayoutEffect(() => {
-        if (game.current === null) {
+        let StartGame: any = null;
 
-            game.current = StartGame("game-container");
+        // Only import and run Phaser in the browser
+        if (typeof window !== 'undefined') {
+            // Dynamic import to ensure Phaser is only loaded client-side
+            import('./scenes/main').then((module) => {
+                StartGame = module.default;
+                if (game.current === null) {
+                    game.current = StartGame("game-container");
 
-            if (typeof ref === 'function') {
-                ref({ game: game.current, scene: null });
-            } else if (ref) {
-                ref.current = { game: game.current, scene: null };
-            }
-
+                    if (typeof ref === 'function') {
+                        ref({ game: game.current, scene: null });
+                    } else if (ref) {
+                        ref.current = { game: game.current, scene: null };
+                    }
+                }
+            });
         }
 
         return () => {
@@ -38,33 +44,28 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
     }, [ref]);
 
     useEffect(() => {
-        EventBus.on('current-scene-ready', (scene_instance: Phaser.Scene) => {
-            if (currentActiveScene && typeof currentActiveScene === 'function') {
+        if (typeof window !== 'undefined') {
+            EventBus.on('current-scene-ready', (scene_instance: Phaser.Scene) => {
+                if (currentActiveScene && typeof currentActiveScene === 'function') {
+                    currentActiveScene(scene_instance);
+                }
 
-                currentActiveScene(scene_instance);
+                if (typeof ref === 'function') {
+                    ref({ game: game.current, scene: scene_instance });
+                } else if (ref) {
+                    ref.current = { game: game.current, scene: scene_instance };
+                }
+            });
+        }
 
-            }
-
-            if (typeof ref === 'function') {
-
-                ref({ game: game.current, scene: scene_instance });
-
-            } else if (ref) {
-
-                ref.current = { game: game.current, scene: scene_instance };
-
-            }
-
-        });
         return () => {
-
-            EventBus.removeListener('current-scene-ready');
-
+            if (typeof window !== 'undefined') {
+                EventBus.removeListener('current-scene-ready');
+            }
         }
     }, [currentActiveScene, ref]);
 
     return (
         <div id="game-container"></div>
     );
-
 });

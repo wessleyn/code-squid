@@ -23,7 +23,7 @@
       ],
       "@styles/*": [
         "./src/styles/*"
-      ],
+      ]
     },
     "target": "ES2017",
     "plugins": [
@@ -35,8 +35,9 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "dist/types/**/*.ts",
     "next-env.d.ts",
-    "dist/types/**/*.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
