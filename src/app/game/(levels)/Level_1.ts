@@ -1,32 +1,32 @@
 import { Scene } from 'phaser';
 import { EventBus } from '../(utils)/EventBus';
 
-export default class Level extends Scene {
-    camera: Phaser.Cameras.Scene2D.Camera;
-    background: Phaser.GameObjects.Image;
+export default class Level_1 extends Scene {
     gameText: Phaser.GameObjects.Text;
 
     constructor() {
-        super('Game');
+        super('Level_1');
     }
 
     create() {
-        this.camera = this.cameras.main;
-        this.camera.setBackgroundColor(0x00ff00);
+        // Get the center of the screen
+        const centerX = this.cameras.main.width / 2;
+        const centerY = this.cameras.main.height / 2;
 
-        this.background = this.add.image(512, 384, 'background');
-        this.background.setAlpha(0.5);
-
-        this.gameText = this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
+        this.gameText = this.add.text(centerX, centerY, 'LEVEL ONE', {
+            fontFamily: 'Arial Black', 
+            fontSize: 38, 
+            color: '#ffffff',
+            stroke: '#000000', 
+            strokeThickness: 8,
             align: 'center'
         }).setOrigin(0.5).setDepth(100);
 
+        // Notify that the level is ready to be interacted with
         EventBus.emit('current-scene-ready', this);
     }
 
     changeScene() {
-        this.scene.start('LevelOver');
+        this.scene.start('Level_Over');
     }
 }

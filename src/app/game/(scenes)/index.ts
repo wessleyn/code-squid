@@ -1,6 +1,5 @@
 import Level_1 from '@levels/Level_1';
 import { AUTO, Game } from 'phaser';
-import { Boot } from './Boot';
 import { LevelOver } from './LevelOver';
 import { Preloader } from './Preloader';
 
@@ -8,17 +7,20 @@ import { Preloader } from './Preloader';
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Phaser.Types.Core.GameConfig = {
     type: AUTO,
-    width: 1024,
-    height: 768,
+    width: window.innerWidth,
+    height: window.innerHeight,
     parent: 'game-container',
-    backgroundColor: '#028af8',
+    backgroundColor: '#00FFFFFF',
     scene: [
-        Boot,
         Preloader,
         Level_1,
         // NextLevel,
         LevelOver
-    ]
+    ],
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    }
 };
 
 const StartGame = (parent: string) => {
