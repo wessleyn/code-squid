@@ -1,48 +1,45 @@
-body {
-    margin: 0;
-    padding: 0;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #000000; 
-    font-family: Arial, Helvetica, sans-serif;
+@import "tailwindcss";
+
+@theme {
+    --color-lavender-50: #f5f6fd;
+    --color-lavender-100: #ececfb;
+    --color-lavender-200: #dcddf8;
+    --color-lavender-300: #bfc0f3;
+    --color-lavender-400: #9e9ceb;
+    --color-lavender-500: #7a71e1;
+    --color-lavender-600: #6553d4;
+    --color-lavender-700: #5540c1;
+    --color-lavender-800: #4836a1;
+    --color-lavender-900: #3c2e84;
+    --color-lavender-950: #231c59;
 }
 
-#app {
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.spritePosition {
-    margin: 10px 0 0 10px;
-    font-size: 0.8em;
-}
-
-.button {
-    width: 140px;
-    margin: 10px;
-    padding: 10px;
-    background-color: #000000;
-    color: rgba(255, 255, 255, 0.87);
-    border: 1px solid rgba(255, 255, 255, 0.87);
-    cursor: pointer;
-    transition: all 0.3s;
-
-    &:hover {
-        border: 1px solid #0ec3c9;
-        color: #0ec3c9;
+@keyframes rise {
+    0% {
+        transform: translateY(100%);
+        opacity: 1;
     }
-
-    &:active {
-        background-color: #0ec3c9;
-    }
-
-    /* Disabled styles */
-    &:disabled {
-        cursor: not-allowed;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: rgba(255, 255, 255, 0.3);
+    100% {
+        transform: translateY(-100vh);
+        opacity: 0.2;
     }
 }
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-float {
+    animation: float 5s ease-in-out infinite;
+}
+
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
