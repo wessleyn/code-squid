@@ -1,7 +1,7 @@
+import { EventBus } from '@utils/EventBus';
 import { forwardRef, useEffect, useLayoutEffect, useRef } from 'react';
-import { EventBus } from './scenes/EventBus';
 
-export interface IRefPhaserGame {
+export interface IRefGameScene {
     game: Phaser.Game | null;
     scene: Phaser.Scene | null;
 }
@@ -10,7 +10,7 @@ interface IProps {
     currentActiveScene?: (scene_instance: Phaser.Scene) => void
 }
 
-export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame({ currentActiveScene }, ref) {
+export const GameScene = forwardRef<IRefGameScene, IProps>(function Game({ currentActiveScene }, ref) {
     const game = useRef<Phaser.Game | null>(null!);
 
     useLayoutEffect(() => {
@@ -19,11 +19,12 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
         // Only import and run Phaser in the browser
         if (typeof window !== 'undefined') {
             // Dynamic import to ensure Phaser is only loaded client-side
-            import('./scenes/main').then((module) => {
+            import('../(scenes)').then((module) => {
                 StartGame = module.default;
-                if (game.current === null) {
-                    game.current = StartGame("game-container");
+                if (game.current === null) { // we have no game instance yet
+                    game.current = StartGame("game-container"); // start a new one
 
+                    // point the ref to the game instance
                     if (typeof ref === 'function') {
                         ref({ game: game.current, scene: null });
                     } else if (ref) {
@@ -33,7 +34,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
             });
         }
 
-        return () => {
+        return () => { // Cleanup the game instance when the component unmounts
             if (game.current) {
                 game.current.destroy(true);
                 if (game.current !== null) {
